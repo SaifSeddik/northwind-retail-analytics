@@ -1,0 +1,4 @@
+CREATE VIEW IF NOT EXISTS orders AS SELECT * FROM orders;
+CREATE VIEW IF NOT EXISTS order_items AS SELECT * FROM "order Details";
+CREATE VIEW IF NOT EXISTS products AS SELECT * FROM products;
+CREATE VIEW IF NOT EXISTS customers AS SELECT * FROM customers;
