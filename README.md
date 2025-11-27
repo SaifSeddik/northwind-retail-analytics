@@ -1,36 +1,65 @@
-<<<<<<< HEAD
-# Retail Analytics Copilot (local hybrid)
 
-Short README: this repository contains a compact local implementation of the assignment "Retail Analytics Copilot (DSPy + LangGraph)". It is intentionally small and deterministic so you can run it locally against the provided Northwind SQLite DB.
+# Northwind Retail Analytics Copilot
 
-Design (2–4 bullets):
-- Graph nodes: Router (DSPy-like), Retriever (TF-IDF), Planner (regex heuristics), NL→SQL (rule templates), Executor (SQLite), Synthesizer (format + citations), Repair loop + Checkpointer.
-- Retriever stores doc chunk ids as `filename::chunk0` (e.g., `marketing_calendar::chunk0`).
-- DSPy optimization demo: Router trained (tiny) classifier improved routing accuracy on a handcrafted eval (see `agent/dspy_signatures.py`). Metric: acc_before -> acc_after.
+Welcome! This project is a local, free AI agent that answers retail analytics questions by combining:
 
-Which DSPy module was optimized: Router. Demo metric (tiny, local): see `agent/dspy_signatures.py` demo_optimizer() which prints a small JSON with before/after accuracy. Example delta will be placed in this README after running.
+- Retrieval-Augmented Generation (RAG) over local documentation (`docs/`)
+- SQL querying over a local Northwind SQLite database
 
-Assumptions / trade-offs:
-- CostOfGoods approximation: 0.7 * UnitPrice when no explicit cost exists (documented in queries).
-- NL→SQL is rule-based and handles the eval questions; not a general NL2SQL model.
-- Repair loop tries up to 2 fixes (switching to lowercase view names) before failing.
+The agent produces typed, auditable answers with citations, and is fully self-contained—no paid APIs or external calls at inference time. It uses DSPy and LangGraph for modular, explainable reasoning and includes a demo of DSPy-based optimization.
 
-How to run (example):
-1. Ensure `data/northwind.sqlite` or `data/northwind.db` exists (downloaded already).
-2. Install dependencies (use a virtualenv):
+## Features
 
+- **Hybrid Reasoning:** Combines document retrieval and SQL execution for robust analytics.
+- **DSPy Optimization:** The Router module is optimized using a tiny, local classifier to improve routing accuracy (see `agent/dspy_signatures.py`).
+- **Citations:** Every answer includes references to the source docs or database queries used.
+- **Repair Loop:** Automatically retries and repairs failed SQL queries for robustness.
+- **No Cloud Required:** 100% local, deterministic, and reproducible.
+
+## Project Structure
+
+- `agent/graph_hybrid.py` — Orchestrates the agent, including the repair loop
+- `agent/dspy_signatures.py` — Router logic and DSPy optimization demo
+- `agent/rag/retrieval.py` — TF-IDF document retriever
+- `agent/tools/sqlite_tool.py` — SQLite DB access and schema introspection
+- `docs/` — Local documentation corpus (marketing calendar, KPIs, catalog, product policy)
+- `data/northwind.sqlite` — Northwind sample database (ensure this exists)
+- `sample_questions_hybrid_eval.jsonl` — Example evaluation questions
+- `run_agent_hybrid.py` — CLI entrypoint for batch question answering
+- `requirements.txt` — Python dependencies
+
+## Setup & Usage
+
+1. **Install dependencies** (recommended: use a virtual environment):
+
+   ```sh
    pip install -r requirements.txt
+   ```
 
-3. Run the agent on the sample batch:
+2. **Ensure the Northwind database is present:**
 
+   Place `northwind.db` or `northwind.sqlite` in the `data/` directory. (Already included in this repo.)
+
+3. **Run the agent on the sample batch:**
+
+   ```sh
    python run_agent_hybrid.py --batch sample_questions_hybrid_eval.jsonl --out outputs_hybrid.jsonl
+   ```
 
-Files of note:
-- `agent/graph_hybrid.py` — orchestration and repair loop
-- `agent/dspy_signatures.py` — Router + tiny optimizer demo
-- `agent/rag/retrieval.py` — TF-IDF retriever
-- `agent/tools/sqlite_tool.py` — DB access and simple introspection
-=======
-# northwind-retail-analytics
-local, free AI agent that answers retail analytics questions by combining: ● RAG over local docs (docs/) ● SQL over a local SQLite DB (Northwind) Produce typed, auditable answers with citations. Use DSPy to optimize at least one component. No paid APIs or external calls at inference time.
->>>>>>> 9a41c4af783175ffb57ae70c0f1b1a55fe7c206b
+4. **Check the output:**
+
+   Results will be saved in `outputs_hybrid.jsonl` with answers, types, and citations.
+
+## Notes & Assumptions
+
+- **CostOfGoods** is approximated as `0.7 * UnitPrice` if not explicitly available (see queries for details).
+- **NL→SQL** is rule-based and tailored to the provided evaluation questions (not a general NL2SQL model).
+- **Repair loop**: If a query fails, the agent will retry with alternative table/view names before giving up.
+- **DSPy Optimization**: The router’s accuracy before/after optimization can be seen by running `demo_optimizer()` in `agent/dspy_signatures.py`.
+
+## Author
+
+This project was developed by Saif Seddik as a demonstration of local, explainable retail analytics using modern AI techniques—no cloud required!
+
+---
+If you have questions or suggestions, feel free to open an issue or pull request.
