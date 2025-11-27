@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Retail Analytics Copilot (local hybrid)
 
 Short README: this repository contains a compact local implementation of the assignment "Retail Analytics Copilot (DSPy + LangGraph)". It is intentionally small and deterministic so you can run it locally against the provided Northwind SQLite DB.
@@ -29,3 +30,7 @@ Files of note:
 - `agent/dspy_signatures.py` — Router + tiny optimizer demo
 - `agent/rag/retrieval.py` — TF-IDF retriever
 - `agent/tools/sqlite_tool.py` — DB access and simple introspection
+=======
+# northwind-retail-analytics
+local, free AI agent that answers retail analytics questions by combining: ● RAG over local docs (docs/) ● SQL over a local SQLite DB (Northwind) Produce typed, auditable answers with citations. Use DSPy to optimize at least one component. No paid APIs or external calls at inference time.
+>>>>>>> 9a41c4af783175ffb57ae70c0f1b1a55fe7c206b
